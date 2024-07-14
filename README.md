@@ -1,6 +1,6 @@
 # UVC Timelapse
 
-Get timelapse on everything running linux.
+> Get timelapse on everything running linux.
 
 This is a set of simple scripts to capture a timelapse using a UVC compatible camera. It uses `v4l2-ctl` to control the camera and `ffmpeg` to capture the images.
 
