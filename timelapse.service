@@ -1,0 +1,14 @@
+[Unit]
+Description=Timelapse Camera Service
+After=network.target
+
+[Service]
+Type=forking
+User=your_username
+WorkingDirectory=/usr/local/uvc_timelapse
+ExecStart=/usr/bin/screen -dmS timelapse /usr/local/uvc_timelapse/capture.sh
+ExecStop=/usr/bin/screen -S timelapse -X quit
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
