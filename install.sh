@@ -40,11 +40,10 @@ Description=Timelapse Camera Service
 After=network.target
 
 [Service]
-Type=forking
+Type=simple
 User=$USER
 WorkingDirectory=$INSTALL_DIR
-ExecStart=/usr/bin/screen -dmS timelapse $INSTALL_DIR/capture.sh
-ExecStop=/usr/bin/screen -S timelapse -X quit
+ExecStart=/bin/bash $INSTALL_DIR/capture.sh
 Restart=on-failure
 
 [Install]

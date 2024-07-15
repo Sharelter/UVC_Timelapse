@@ -10,7 +10,7 @@ if ! command -v ffmpeg &> /dev/null || ! command -v v4l2-ctl &> /dev/null; then
 fi
 
 # Redirect all output to capture.log
-exec >>capture.log 2>&1
+exec > >(awk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0; fflush(); }' >>capture.log) 2>&1
 
 # Use the loaded configuration for interval and duration
 interval=$INTERVAL_SECONDS
