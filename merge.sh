@@ -15,7 +15,7 @@ while [[ "$#" -gt 0 ]]; do
 	esac
 	shift
 done
-
+	
 # Check if input directory is provided and exists
 if [[ -z "$input_dir" || ! -d "$input_dir" ]]; then
 	echo "Input directory is required and must exist."
@@ -37,5 +37,11 @@ fi
 
 # Use ffmpeg to merge the images into an MP4 file with the specified frame rate
 ffmpeg -framerate "$frame_rate" -pattern_type glob -i "$input_dir/*.jpg" -c:v libx264 -pix_fmt yuv420p "$output_file"
+
+# # Use ffmpeg with QSV to merge the images into an MP4 file with the specified frame rate
+# ffmpeg -framerate "$frame_rate" -pattern_type glob -i "$input_dir/*.jpg" -c:v h264_qsv -pix_fmt yuv420p "$output_file"
+
+# # Use ffmpeg with VAAPI to merge the images into an MP4 file with the specified frame rate
+# ffmpeg -vaapi_device /dev/dri/renderD128 -framerate "$frame_rate" -pattern_type glob -i "$input_dir/*.jpg" -vf 'format=nv12,hwupload' -c:v h264_vaapi -pix_fmt yuv420p "$output_file"
 
 echo "Merging completed: $output_file"
