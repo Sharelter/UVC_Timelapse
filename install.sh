@@ -25,7 +25,7 @@ mkdir -p "$INSTALL_DIR"
 
 # Copy project files
 echo "Copying project files to $INSTALL_DIR..."
-cp -r ./UVC_Timelapse/* "$INSTALL_DIR/"
+cp -r ./capture.sh ./merge.sh capture.conf "$INSTALL_DIR/"
 
 # Update ownership (optional, depending on your requirements)
 chown -R $USER:$USER "$INSTALL_DIR"
