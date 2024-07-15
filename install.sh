@@ -1,10 +1,17 @@
 #!/bin/bash
 
-# Define the installation directory
-INSTALL_DIR="/usr/local/uvc_timelapse"
+# Use $SUDO_USER to get the home directory of the user who invoked sudo, fallback to $HOME if not set
+if [ -n "$SUDO_USER" ]; then
+    HOME_DIR=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+else
+    HOME_DIR=$HOME
+fi
+
+INSTALL_DIR="$HOME_DIR/uvc_timelapse"
 
 # Define the user to run the service as
-USER="your_username"
+# Use the SUDO_USER environment variable if set, otherwise use the output of whoami
+USER="${SUDO_USER:-$(whoami)}"
 
 # Check if running as root
 if [ "$(id -u)" -ne 0 ]; then
@@ -21,7 +28,7 @@ echo "Copying project files to $INSTALL_DIR..."
 cp -r ./UVC_Timelapse/* "$INSTALL_DIR/"
 
 # Update ownership (optional, depending on your requirements)
-# chown -R $USER:$USER "$INSTALL_DIR"
+chown -R $USER:$USER "$INSTALL_DIR"
 
 # Create systemd service file
 SERVICE_FILE="/etc/systemd/system/timelapse.service"
