@@ -36,28 +36,28 @@ echo "Using maximum resolution: $max_res"
 
 # Capture images until storage is less than 10%
 while true; do
-	# Check for the presence of the USB UVC device
 	if [ ! -e /dev/video0 ]; then
 		echo "USB UVC device not found. Please ensure the device is properly connected."
 		exit 1
 	fi
 
-	# Check remaining storage on the filesystem where timelapse_images directory resides
 	remaining_storage=$(df "$timelapse_dir" | awk 'NR==2 {print $4/$2*100}')
-
-	# Check if remaining storage is less than 10%
 	if (( $(echo "$remaining_storage < 10" | bc -l) )); then
 		echo "Remaining storage is below 10%, stopping capture."
 		break
 	fi
 
+	start_time=$(date +%s.%N)
 	filename=$(date +'%Y-%m-%d_%H-%M-%S').jpg
 	ffmpeg -f v4l2 -video_size $max_res -i /dev/video0 -frames 1 "$filename"
-	# Check if ffmpeg command was successful
 	if [ $? -ne 0 ]; then
 		echo "Error capturing image. Please check the camera and try again."
 		exit 1
 	fi
 	echo "Captured $filename"
-	sleep $interval
+	end_time=$(date +%s.%N)
+	elapsed=$(echo "$end_time - $start_time" | bc)
+	adjusted_sleep=$(echo "$interval - $elapsed" | bc)
+	echo "Capture took $elapsed seconds, sleeping for $adjusted_sleep seconds"
+	sleep $adjusted_sleep
 done
